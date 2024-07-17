@@ -39,16 +39,13 @@ public class UserController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<UserDto> patchUser(@PathVariable long id, @RequestBody UpdateUserDto request) {
-        return userService.find(id)
-                .map(user -> {
-                    user.setGender(request.getGender());
-                    user.setAge(request.getAge());
-                    User updatedUser = userService.update(user);
-
-                    return ResponseEntity.ok(userService.convertToDto(updatedUser));
-
-                })
+        User user = userService.find(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        User updatedUser = userService.update(userService.convertToDto(user), id);
+
+        return ResponseEntity.ok(userService.convertToDto(updatedUser));
+
     }
 
     @DeleteMapping("/{id}")

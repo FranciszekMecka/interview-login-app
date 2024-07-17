@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.modelmapper.ModelMapper;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -36,7 +37,13 @@ public class UserService {
         return repository.save(user);
     }
 
-    public User update(User user) {
+    public User update(UserDto userDto, long id) {
+        User user = repository.findById(id).orElseThrow(NoSuchElementException::new);
+
+        user.setAge(userDto.getAge());
+        user.setGender(userDto.getGender());
+
+
         return repository.save(user);
     }
 
