@@ -1,6 +1,6 @@
 package lloyd.hapag.mecka.franciszek.loginapp.user.controller;
 
-import lloyd.hapag.mecka.franciszek.loginapp.user.dto.GetUserDto;
+import lloyd.hapag.mecka.franciszek.loginapp.user.dto.UserDto;
 import lloyd.hapag.mecka.franciszek.loginapp.user.dto.UpdateUserDto;
 import lloyd.hapag.mecka.franciszek.loginapp.user.entity.User;
 import lloyd.hapag.mecka.franciszek.loginapp.user.service.UserService;
@@ -21,24 +21,24 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<GetUserDto> createUser(@RequestBody GetUserDto userDto) {
+    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
         User user = userService.convertToEntity(userDto);
         userService.create(user);
-        GetUserDto responseDto = userService.convertToDto(user);
+        UserDto responseDto = userService.convertToDto(user);
         return ResponseEntity.ok(responseDto);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<GetUserDto> getUser(@PathVariable long id) {
+    public ResponseEntity<UserDto> getUser(@PathVariable long id) {
         User user = userService.find(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        GetUserDto userDto = userService.convertToDto(user);
+        UserDto userDto = userService.convertToDto(user);
 
         return ResponseEntity.ok(userDto);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<GetUserDto> patchUser(@PathVariable long id, @RequestBody UpdateUserDto request) {
+    public ResponseEntity<UserDto> patchUser(@PathVariable long id, @RequestBody UpdateUserDto request) {
         return userService.find(id)
                 .map(user -> {
                     user.setGender(request.getGender());

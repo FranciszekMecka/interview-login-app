@@ -21,10 +21,10 @@ public class User {
     @Column(unique = true, nullable = false, updatable = false)
     private String username;
 
-    @Column(nullable = false, updatable = true)
+    @Column(nullable = false)
     private String gender;
 
-    @Column(nullable = false, updatable = true)
+    @Column(nullable = false)
     private int age;
 
     @Column(nullable = false, updatable = false)
