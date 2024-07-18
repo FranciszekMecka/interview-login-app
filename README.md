@@ -1,6 +1,6 @@
 # Maven Spring Project with Tests
 
-This project is a Maven-based Spring application that includes unit tests and integration tests.
+This project is a Maven-based Spring application that includes tests.
 
 ## Prerequisites
 
