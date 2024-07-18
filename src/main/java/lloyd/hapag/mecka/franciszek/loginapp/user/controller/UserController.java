@@ -1,5 +1,6 @@
 package lloyd.hapag.mecka.franciszek.loginapp.user.controller;
 
+import lloyd.hapag.mecka.franciszek.loginapp.user.dto.CreateUserDto;
 import lloyd.hapag.mecka.franciszek.loginapp.user.dto.UserDto;
 import lloyd.hapag.mecka.franciszek.loginapp.user.dto.UpdateUserDto;
 import lloyd.hapag.mecka.franciszek.loginapp.user.entity.User;
@@ -20,41 +21,39 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
-        User user = userService.convertToEntity(userDto);
-        userService.create(user);
-        UserDto responseDto = userService.convertToDto(user);
-        return ResponseEntity.ok(responseDto);
-    }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable long id) {
-        User user = userService.find(id)
+        User user = userService.getById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        UserDto userDto = userService.convertToDto(user);
 
-        return ResponseEntity.ok(userDto);
+        return ResponseEntity.ok(userService.mapToDto(user));
     }
 
-    @PatchMapping("/{id}")
+    @PostMapping("/create")
+    public ResponseEntity<UserDto> createUser(@RequestBody CreateUserDto createuserDto) {
+        UserDto responseDto = userService.create(createuserDto);
+        return ResponseEntity.ok(responseDto);
+    }
+
+    @PatchMapping("/{id}/update")
     public ResponseEntity<UserDto> patchUser(@PathVariable long id, @RequestBody UpdateUserDto request) {
-        User user = userService.find(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        userService.getById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        User updatedUser = userService.update(userService.convertToDto(user), id);
+        UserDto updatedUserDto = userService.update(request, id);
 
-        return ResponseEntity.ok(userService.convertToDto(updatedUser));
+        return ResponseEntity.ok(updatedUserDto);
 
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        return userService.find(id)
+    @DeleteMapping("/{id}/delete")
+    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
+        userService.getById(id)
                 .map(user -> {
                     userService.delete(id);
                     return ResponseEntity.noContent().<Void>build();
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return ResponseEntity.ok("User deleted");
     }
 }

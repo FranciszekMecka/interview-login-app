@@ -2,6 +2,8 @@ package lloyd.hapag.mecka.franciszek.loginapp.service;
 
 
 import lloyd.hapag.mecka.franciszek.loginapp.user.config.AppConfig;
+import lloyd.hapag.mecka.franciszek.loginapp.user.dto.CreateUserDto;
+import lloyd.hapag.mecka.franciszek.loginapp.user.dto.UpdateUserDto;
 import lloyd.hapag.mecka.franciszek.loginapp.user.dto.UserDto;
 import lloyd.hapag.mecka.franciszek.loginapp.user.entity.User;
 import lloyd.hapag.mecka.franciszek.loginapp.user.repository.UserRepository;
@@ -36,9 +38,6 @@ public class UserServiceTests {
     @Mock
     private UserRepository userRepository;
 
-    @Mock
-    private ModelMapper modelMapper;
-
     @InjectMocks
     private UserService userService;
 
@@ -52,11 +51,17 @@ public class UserServiceTests {
                 .accountCreationTimestamp(Timestamp.from(Instant.now()))
                 .build();
 
-        UserService userService = new UserService(userRepository, new ModelMapper());
+        CreateUserDto createUserDto = CreateUserDto.builder()
+                .username("John Doe")
+                .gender("Male")
+                .age(55)
+                .build();
+
+        UserService userService = new UserService(userRepository);
 
         when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
 
-        User createdUser = userService.create(user);
+        UserDto createdUser = userService.create(createUserDto);
 
         Assertions.assertThat(createdUser).isNotNull();
     }
@@ -72,7 +77,7 @@ public class UserServiceTests {
                 .build();
 
         when(userRepository.findById(1L)).thenReturn(Optional.ofNullable(user));
-        Optional<User> createdUser = userService.find(1L);
+        Optional<User> createdUser = userService.getById(1L);
         Assertions.assertThat(createdUser).isNotNull();
 
     };
@@ -87,14 +92,19 @@ public class UserServiceTests {
                 .accountCreationTimestamp(Timestamp.from(Instant.now()))
                 .build();
 
-        UserService userService = new UserService(userRepository, new ModelMapper());
+        UpdateUserDto updateUserDto = UpdateUserDto.builder()
+                .gender("Male")
+                .age(77)
+                .build();
+
+        UserService userService = new UserService(userRepository);
 
         when(userRepository.findById(1L)).thenReturn(Optional.ofNullable(user));
         when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
 
 
         assert user != null;
-        User createdUser = userService.update(userService.convertToDto(user), user.getId());
+        UserDto createdUser = userService.update(updateUserDto, user.getId());
         Assertions.assertThat(createdUser).isNotNull();
 
     }
