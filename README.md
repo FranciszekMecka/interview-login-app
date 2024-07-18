@@ -7,6 +7,7 @@ This project is a Maven-based Spring application that includes tests.
 Before you begin, ensure you have met the following requirements:
 - Java Development Kit (JDK) installed, preferably JDK 17 or higher.
 - Maven installed on your local machine.
+- PostgresDB or any other db of your choice.
 
 ## Getting Started
 
@@ -24,6 +25,8 @@ To get a local copy up and running follow these simple steps.
     ```sh
      mvn clean install
     ```
+   
+3. Configure DB settings in application.properties file. Test cases use in memory H2 database.
    
 ### Running Tests
 
