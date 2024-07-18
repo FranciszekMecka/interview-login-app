@@ -5,7 +5,7 @@ This project is a Maven-based Spring application that includes tests.
 ## Prerequisites
 
 Before you begin, ensure you have met the following requirements:
-- Java Development Kit (JDK) installed, preferably JDK 8 or higher.
+- Java Development Kit (JDK) installed, preferably JDK 17 or higher.
 - Maven installed on your local machine.
 
 ## Getting Started
